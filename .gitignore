@@ -22,3 +22,7 @@ Release.win32/
 **/Release.win32/
 bin/
 obj/
+/proj.win32/Project.sln
+/proj.win32/Project.vcxproj
+/proj.win32/Project.vcxproj.filters
+/proj.ios_mac/Project.xcodeproj/project.pbxproj

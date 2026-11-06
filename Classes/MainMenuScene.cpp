@@ -61,4 +61,6 @@ void MainMenuScene::menuRulesCallback(Ref* pSender) {
 
 void MainMenuScene::menuExitCallback(Ref* pSender) {
     Director::getInstance()->end();
+    int i;
 }
+
