@@ -1,0 +1,24 @@
+﻿# Visual Studio кеш та індекси
+.vs/
+**/.vs/
+*.vsidx
+*.suo
+*.user
+*.VC.db
+*.opendb
+*.ipch
+*.pch
+*.pdb
+*.ilk
+*.idb
+*.obj
+
+# Збірки та тимчасові файли Cocos2d-x
+Debug/
+Release/
+Debug.win32/
+Release.win32/
+**/Debug.win32/
+**/Release.win32/
+bin/
+obj/
