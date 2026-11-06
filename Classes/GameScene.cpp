@@ -32,6 +32,8 @@ bool GameScene::init() {
     menu->setPosition(Vec2::ZERO);
     this->addChild(menu, 1);
 
+    int i;
+
     return true;
 }
 
