@@ -1,66 +1,75 @@
 #include "MainMenuScene.h"
-#include "GameScene.h"
+#include "SetupScene.h"
+#include "RulesScene.h"
 
 USING_NS_CC;
 
-Scene* MainMenuScene::createScene() {
-    return MainMenuScene::create();
+Scene* MainMenuScene::createScene()
+{
+    auto scene = Scene::create();
+    auto layer = MainMenuScene::create();
+    scene->addChild(layer);
+    return scene;
 }
 
-bool MainMenuScene::init() {
-    if (!Scene::init()) {
+bool MainMenuScene::init()
+{
+    if (!Layer::init())
+    {
         return false;
     }
 
-    auto visibleSize = Director::getInstance()->getVisibleSize();
-    Vec2 origin = Director::getInstance()->getVisibleOrigin();
+    Size size = Director::getInstance()->getWinSize();
 
     auto background = Sprite::create("MainMenu.png");
-    background->setPosition(Vec2(origin.x + visibleSize.width / 2, origin.y + visibleSize.height / 2));
-    background->setScaleX(visibleSize.width / background->getContentSize().width);
-    background->setScaleY(visibleSize.height / background->getContentSize().height);
-    this->addChild(background, -1);
+    background->setPosition(Vec2(size.width / 2, size.height / 2));
+    this->addChild(background);
 
-    auto playItem = MenuItemImage::create(
-        "PlayButton.png",
-        "PlayButton.png",
-        CC_CALLBACK_1(MainMenuScene::menuPlayCallback, this));
-    playItem->setPosition(Vec2(origin.x + visibleSize.width * 0.69f, origin.y + visibleSize.height * 0.63f));
+    float boardX = size.width * 0.69f;
+
+    // (êíîïêà) ïåğåäàº êàğòèíêè çâè÷àéíîãî ³ íàòèñíóòîãî ñòàíó, ïğèâ'ÿçóº ôóíêö³ş menuPlayCallback
+    auto normalPlay = Sprite::create("PlayButton.png");
+    auto selectedPlay = Sprite::create("PlayButton.png");
+    selectedPlay->setColor(Color3B(150, 150, 150)); // çàòåìíåííÿ íàòèñíóòî¿
+    auto playItem = MenuItemSprite::create(normalPlay, selectedPlay, CC_CALLBACK_1(MainMenuScene::menuPlayCallback, this));
     playItem->setScale(0.5f);
+    playItem->setPosition(Vec2(boardX, size.height * 0.65f));
 
-    auto rulesItem = MenuItemImage::create(
-        "RegulationsButton.png",
-        "RegulationsButton.png",
-        CC_CALLBACK_1(MainMenuScene::menuRulesCallback, this));
-    rulesItem->setPosition(Vec2(origin.x + visibleSize.width * 0.69f, origin.y + visibleSize.height * 0.48f));
+    auto normalRules = Sprite::create("RegulationsButton.png");
+    auto selectedRules = Sprite::create("RegulationsButton.png");
+    selectedRules->setColor(Color3B(150, 150, 150));
+    auto rulesItem = MenuItemSprite::create(normalRules, selectedRules, CC_CALLBACK_1(MainMenuScene::menuRulesCallback, this));
     rulesItem->setScale(0.5f);
+    rulesItem->setPosition(Vec2(boardX, size.height * 0.5f));
 
-    auto exitItem = MenuItemImage::create(
-        "ExitButton.png",
-        "ExitButton.png",
-        CC_CALLBACK_1(MainMenuScene::menuExitCallback, this));
-    exitItem->setPosition(Vec2(origin.x + visibleSize.width * 0.85f, origin.y + visibleSize.height * 0.12f));
+    auto normalExit = Sprite::create("ExitButton.png");
+    auto selectedExit = Sprite::create("ExitButton.png");
+    selectedExit->setColor(Color3B(150, 150, 150));
+    auto exitItem = MenuItemSprite::create(normalExit, selectedExit, CC_CALLBACK_1(MainMenuScene::menuExitCallback, this));
     exitItem->setScale(0.5f);
+    exitItem->setPosition(Vec2(size.width - 250, 100));
 
-    auto menu = Menu::create(playItem, rulesItem, exitItem, nullptr);
-    menu->setPosition(Vec2::ZERO);
+    // îá'ºäíàííÿ âñ³õ êíîïîê â îá'ºêò Ìåíş
+    auto menu = Menu::create(playItem, rulesItem, exitItem, NULL);
+    menu->setPosition(Vec2(0, 0)); // ïîçèö³¿ 0, áî îá'ºêòè ìàşòü êîîğäèíàòè
     this->addChild(menu, 1);
 
     return true;
 }
 
-void MainMenuScene::menuPlayCallback(Ref* pSender) {
-    auto scene = GameScene::createScene();
-    Director::getInstance()->replaceScene(TransitionFade::create(0.5, scene));
+void MainMenuScene::menuPlayCallback(Ref* pSender) // "Ãğàòè"
+{
+    auto scene = SetupScene::createScene(); // ñòâîğşº íîâó ñöåíó
+    Director::getInstance()->replaceScene(scene); // ïîâíà çàì³íà ñöåíè íà ³íøó
 }
 
-void MainMenuScene::menuRulesCallback(Ref* pSender) {
-    auto scene = GameScene::createScene();
-    Director::getInstance()->replaceScene(TransitionFade::create(0.5, scene));
+void MainMenuScene::menuRulesCallback(Ref* pSender) // "Ïğàâèëà"
+{
+    auto scene = RulesScene::createScene();
+    Director::getInstance()->replaceScene(scene);
 }
 
-void MainMenuScene::menuExitCallback(Ref* pSender) {
+void MainMenuScene::menuExitCallback(Ref* pSender) // "Âèõ³ä"
+{
     Director::getInstance()->end();
-    int i;
 }
-

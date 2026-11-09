@@ -1,16 +1,15 @@
-#ifndef __GAME_SCENE_H__
-#define __GAME_SCENE_H__
+#ifndef GAMESCENE_H
+#define GAMESCENE_H
 
 #include "cocos2d.h"
 
-class GameScene : public cocos2d::Scene {
+class GameScene : public cocos2d::Layer
+{
 public:
     static cocos2d::Scene* createScene();
     virtual bool init();
 
-    void menuBackCallback(cocos2d::Ref* pSender);
-
     CREATE_FUNC(GameScene);
 };
 
-#endif
+#endif 
