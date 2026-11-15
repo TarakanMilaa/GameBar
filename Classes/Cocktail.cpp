@@ -16,10 +16,10 @@ Cocktail* Cocktail::create()
 
 bool Cocktail::init()
 {
-    // 1. Завантажуємо спрайт-лист коктейлів (лекція Л03, стор. 4)
+    // 1. Завантажуємо спрайт-лист коктейлів
     SpriteFrameCache::getInstance()->addSpriteFramesWithFile("cocktail.plist");
 
-    // 2. Вибираємо випадковий коктейль із 10 (лекція Л03, стор. 3)
+    // 2. Вибираємо випадковий коктейль із 10
     int randomIndex = cocos2d::random(1, 10);
     std::string frameName = StringUtils::format("cocktail%d.png", randomIndex);
 
@@ -37,10 +37,10 @@ bool Cocktail::init()
     physics_cocktail->setContactTestBitmask(true);
     this->setPhysicsBody(physics_cocktail);
 
-    // Встановлюємо тег 2 для ідентифікації під час колізій (лекція Л11-Л12, стор. 45)
+    // Встановлюємо тег 2 для ідентифікації під час
     this->setTag(2);
 
-    // Запускаємо оновлення update(dt) (лекція Л03, стор. 7-8)
+    // Запускаємо оновлення update(dt)
     this->scheduleUpdate();
 
     return true;
@@ -54,12 +54,12 @@ void Cocktail::throwFromBartender(Vec2 handStartPos, float bartenderX)
     // 1. Підіймаємо коктейль разом із руками бармена під час замаху
     auto liftWithHands = MoveBy::create(0.3f, Vec2(0, 45));
 
-    // 2. Після замаху вмикаємо фізику та задаємо швидкість кидка (лекція Л11-Л12, стор. 38, 41)
+    // 2. Після замаху вмикаємо фізику та задаємо швидкість кидка
     auto launch = CallFunc::create([this, bartenderX]() {
         auto visibleSize = Director::getInstance()->getVisibleSize();
 
         // 1. Вибираємо випадкову цільову точку X строго всередині екрана (з відступом 100 пікс. від країв)
-        float margin = 100.0f;
+        float margin = 90.0f;
         float noDropRadius = 180.0f; // зона біля бармена, куди не кидаємо
         float targetX = 0.0f;
 
@@ -80,14 +80,14 @@ void Cocktail::throwFromBartender(Vec2 handStartPos, float bartenderX)
         this->getPhysicsBody()->applyTorque((vx > 0) ? -2000 : 2000);
         });
 
-    // Послідовність: підйом у руці -> кидок (лекція Л03, стор. 7)
+    // Послідовність: підйом у руці -> кидок
     auto seq = Sequence::create(liftWithHands, launch, nullptr);
     this->runAction(seq);
 }
 
 void Cocktail::update(float dt)
 {
-    // Якщо коктейль впав нижче екрана — видаляємо його зі сцени (лекція Л11-Л12, стор. 44)
+    // Якщо коктейль впав нижче екрана — видаляємо його зі сцени
     if (this->getPositionY() < -100.0f)
     {
         this->removeFromParentAndCleanup(true);

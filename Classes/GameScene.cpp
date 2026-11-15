@@ -28,7 +28,7 @@ bool GameScene::init()
     // фон
     auto background = Sprite::create("GameBG.png");
     background->setPosition(Vec2(size.width / 2, size.height / 2));
-    this->addChild(background);
+    this->addChild(background, 0);
 
     // Офіціант
     auto waiter = Waiter::create();
@@ -43,9 +43,10 @@ bool GameScene::init()
     this->addChild(bartender, 1);
 
     // Нижній шар фону
-    auto buttonBackground = Sprite::create("GameBG.png", Rect(0, 605, 1672, 300));
+    auto buttonBackground = Sprite::create("GameBG.png", Rect(0, 590, 1703, 340));
     float heightButtonBG = buttonBackground->getBoundingBox().size.height;
-    buttonBackground->setPosition(Vec2(size.width / 2, heightButtonBG / 2 + 28));
+
+    buttonBackground->setPosition(Vec2(size.width / 2, heightButtonBG / 2 - 8));
     this->addChild(buttonBackground, 2);
 
     // Створення слухача фізики
