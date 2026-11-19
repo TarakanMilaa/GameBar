@@ -46,7 +46,7 @@ bool Cocktail::init()
     int tagToSet = TAG_GOOD_COCKTAIL;
     std::string frameName;
 
-    if (typeChance == 9  && currentLives < 3)
+    if (typeChance == 9 && currentLives < 3)
     {
         // Коктейль життя
         isBad = true;

@@ -1,7 +1,7 @@
 #include "MainMenuScene.h"
 #include "SetupScene.h"
 #include "RulesScene.h"
-
+#include "StatsScene.h"
 USING_NS_CC;
 
 Scene* MainMenuScene::createScene()
@@ -49,8 +49,17 @@ bool MainMenuScene::init()
     exitItem->setScale(0.5f);
     exitItem->setPosition(Vec2(size.width - 250, 100));
 
-    // об'єднання всіх кнопок в об'єкт Меню
-    auto menu = Menu::create(playItem, rulesItem, exitItem, NULL);
+    // (нова кнопка) "Статистика" на барній стійці зліва з програмним затемненням
+    auto normalStats = Sprite::create("StatButton.png");
+    auto selectedStats = Sprite::create("StatButton.png");
+    selectedStats->setColor(Color3B(150, 150, 150)); // затемнення натиснутої
+    auto statsItem = MenuItemSprite::create(normalStats, selectedStats, CC_CALLBACK_1(MainMenuScene::menuStatsCallback, this));
+    statsItem->setScale(0.13f); // масштабуємо, щоб вона акуратно виглядала на стійці
+    // розміщуємо на барній стійці зліва (приблизні координати на основі візуального аналізу інтер'єру)
+    statsItem->setPosition(Vec2(170, 360));
+
+    // об'єднання всіх кнопок в об'єкт Меню (додано statsItem)
+    auto menu = Menu::create(playItem, rulesItem, exitItem, statsItem, NULL);
     menu->setPosition(Vec2(0, 0)); // позиції 0, бо об'єкти мають координати
     this->addChild(menu, 1);
 
@@ -72,4 +81,10 @@ void MainMenuScene::menuRulesCallback(Ref* pSender) // "Правила"
 void MainMenuScene::menuExitCallback(Ref* pSender) // "Вихід"
 {
     Director::getInstance()->end();
+}
+
+void MainMenuScene::menuStatsCallback(Ref* pSender) // "Статистика"
+{
+    auto scene = StatsScene::createScene();
+    Director::getInstance()->replaceScene(scene);
 }

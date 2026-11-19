@@ -146,11 +146,33 @@ void GameScene::loseLife()
     }
 
     // Якщо життя закінчилися — переходимо на сцену GameOver
-    if (lives <= 0)
-    {
-        auto gameOverScene = GameOverScene::createScene();
-        Director::getInstance()->replaceScene(TransitionFade::create(0.5f, gameOverScene));
-    }
+	// Якщо життя закінчилися — зберігаємо рахунок і переходимо на сцену GameOver
+	if (lives <= 0)
+	{
+		auto userDef = UserDefault::getInstance();
+
+		// Зберігаємо рахунок за поточну гру
+		userDef->setIntegerForKey("LastScore", score);
+
+		// Беремо поточну швидкість (перевір, щоб ключ збігався з тим, що в SetupScene.cpp!)
+		int speed = userDef->getIntegerForKey("GameSpeed", 1);
+		string playerName = userDef->getStringForKey("PlayerName", u8"Гість");
+
+		string scoreKey = "BestScore_" + std::to_string(speed);
+		string nameKey = "BestPlayer_" + std::to_string(speed);
+
+		int currentBest = userDef->getIntegerForKey(scoreKey.c_str(), 0);
+		if (score > currentBest)
+		{
+			userDef->setIntegerForKey(scoreKey.c_str(), score);
+			userDef->setStringForKey(nameKey.c_str(), playerName);
+		}
+
+		userDef->flush();
+
+		auto gameOverScene = GameOverScene::createScene();
+		Director::getInstance()->replaceScene(TransitionFade::create(0.5f, gameOverScene));
+	}
 }
 
 void GameScene::gainLife()
