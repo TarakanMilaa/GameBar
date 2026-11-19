@@ -6,10 +6,23 @@
 class GameScene : public cocos2d::Layer
 {
 public:
-    static cocos2d::Scene* createScene();
-    virtual bool init();
+	static cocos2d::Scene* createScene();
+	virtual bool init();
 
-    CREATE_FUNC(GameScene);
+	// Ігровий цикл для оновлення сцени[cite: 70]
+	virtual void update(float dt) override;
+
+	// Метод для спавну коктейлів[cite: 71]
+	void spawnCocktail(float dt);
+
+	// Зворотній виклик для ідентифікації колізій[cite: 7]
+	bool onCollision(cocos2d::PhysicsContact& contact);
+
+	CREATE_FUNC(GameScene);
+
+private:
+	cocos2d::Label* _scoreLabel;
+	cocos2d::Label* _livesLabel;
 };
 
-#endif 
+#endif
