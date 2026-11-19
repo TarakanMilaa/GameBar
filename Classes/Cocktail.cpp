@@ -25,10 +25,19 @@ bool Cocktail::init()
 
     // 2. Дізнаємося поточну кількість життів гравця
     int currentLives = 3;
-    auto gameScene = dynamic_cast<GameScene*>(Director::getInstance()->getRunningScene());
-    if (gameScene)
+    auto runningScene = Director::getInstance()->getRunningScene();
+    if (runningScene)
     {
-        currentLives = gameScene->getLives();
+        // GameScene is a child of the physics scene, not the running scene itself
+        for (auto child : runningScene->getChildren())
+        {
+            auto gameScene = dynamic_cast<GameScene*>(child);
+            if (gameScene)
+            {
+                currentLives = gameScene->getLives();
+                break;
+            }
+        }
     }
 
     // 3. Вибираємо тип коктейлю (0..9):

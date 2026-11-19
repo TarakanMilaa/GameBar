@@ -1,7 +1,6 @@
 #include "SetupScene.h"
 #include "MainMenuScene.h"
 #include "GameScene.h" 
-#include "DataManager.h" 
 
 using namespace std;
 
@@ -166,7 +165,7 @@ void SetupScene::menuStartCallback(Ref* pSender)
 {
     string playerName = _nameInput->getString(); // зчитує введений в поле текст
     if (playerName.empty()) { // перевірка чи рядок порожній
-        playerName = "Гість"; // якщо нічого не введено, то встановлюється дефолт ім'я
+        playerName = u8"Гість"; // якщо нічого не введено, то встановлюється дефолт ім'я
     }
 
     UserDefault::getInstance()->setStringForKey("PlayerName", playerName); // зберігає ім'я у файл налаштувань гри

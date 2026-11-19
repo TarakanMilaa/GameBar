@@ -44,8 +44,6 @@ bool Bartender::init()
     }
 
     // Створюємо анімацію
-    throwAnimation = Animation::createWithSpriteFrames(frames, 0.1f);
-    throwAnimation->retain();
 
     // Зчитуємо рівень гри
     int gameSpeed = UserDefault::getInstance()->getIntegerForKey("GameSpeed", 1);

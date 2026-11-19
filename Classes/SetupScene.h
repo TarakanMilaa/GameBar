@@ -27,4 +27,4 @@ private:
     int _selectedSpeed;                // Змінна для збереження вибору (1, 2, 3)
 };
 
-#endif#pragma once
+#endif
