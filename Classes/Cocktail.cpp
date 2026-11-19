@@ -28,7 +28,7 @@ bool Cocktail::init()
         return false;
     }
 
-    // 3. Створюємо фізичне тіло коктейлю (лекція Л11-Л12, стор. 38, 41, 43)
+    // 3. Створюємо фізичне тіло коктейлю 
     Size bodySize = Size(this->getContentSize().width * 0.06f, this->getContentSize().height * 0.12f);
     auto physics_cocktail = PhysicsBody::createBox(bodySize, PhysicsMaterial(0.0f, 1.0f, 0.0f));
     physics_cocktail->setDynamic(false); // поки в руках бармена, гравітація не діє
@@ -58,8 +58,8 @@ void Cocktail::throwFromBartender(Vec2 handStartPos, float bartenderX)
     auto launch = CallFunc::create([this, bartenderX]() {
         auto visibleSize = Director::getInstance()->getVisibleSize();
 
-        // 1. Вибираємо випадкову цільову точку X строго всередині екрана (з відступом 100 пікс. від країв)
-        float margin = 90.0f;
+        // 1. Вибираємо випадкову цільову точку X строго всередині екрана
+        float margin = 150.0f; // відступ від країв сцени
         float noDropRadius = 180.0f; // зона біля бармена, куди не кидаємо
         float targetX = 0.0f;
 
@@ -87,9 +87,13 @@ void Cocktail::throwFromBartender(Vec2 handStartPos, float bartenderX)
 
 void Cocktail::update(float dt)
 {
-    // Якщо коктейль впав нижче екрана — видаляємо його зі сцени
-    if (this->getPositionY() < -100.0f)
+    // Якщо коктейль впав нижче екрана — видаляємо його зі сцени і повідомляємо про це для рахунку
+    if (this->getPositionY() < -10.0f)
     {
+        if (onMissCallback)
+        {
+            onMissCallback();
+        }
         this->removeFromParentAndCleanup(true);
     }
 }

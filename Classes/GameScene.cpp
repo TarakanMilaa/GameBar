@@ -2,6 +2,7 @@
 #include "Waiter.h"
 #include "Bartender.h"
 #include "Cocktail.h"
+#include "GameOverScene.h"
 
 USING_NS_CC;
 
@@ -54,6 +55,25 @@ bool GameScene::init()
     contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onCollision, this);
     this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
+    // Лічильник очок
+    score = 0;
+    scoreLabel = Label::createWithSystemFont("Score: 0", "Arial", 36);
+    scoreLabel->setAnchorPoint(Vec2(0, 0.5f));
+    scoreLabel->setPosition(540, 750);
+    scoreLabel->setTextColor(cocos2d::Color4B(255, 212, 132, 255));
+    this->addChild(scoreLabel, 4);
+
+    // Серця
+    lives = 3;
+    for (int i = 0; i < 3; i++)
+    {
+        auto heart = Sprite::create("heart.png");
+        heart->setScale(0.1f);
+        heart->setPosition(560 + (i * 65), 700);
+        this->addChild(heart, 4);
+        hearts.pushBack(heart);
+    }
+
     return true;
 }
 
@@ -72,7 +92,30 @@ bool GameScene::onCollision(PhysicsContact& contact)
         Node* cocktailNode = (tagA == 2) ? nodeA : nodeB;
         cocktailNode->stopAllActions();
         cocktailNode->removeFromParentAndCleanup(true);
+
+        score++;
+        scoreLabel->setString("Score: " + std::to_string(score));
     }
 
     return true;
+}
+
+void GameScene::loseLife()
+{
+    if (lives <= 0) return;
+
+    lives--;
+
+    // Замінюємо картинку відповідного серця на розбите
+    if (lives >= 0 && lives < hearts.size())
+    {
+        hearts.at(lives)->setTexture("brokenheart.png"); // підстав назву свого файлу розбитого серця!
+    }
+
+    // Якщо життя закінчилися — переходимо на сцену GameOver
+    if (lives <= 0)
+    {
+        auto gameOverScene = GameOverScene::createScene();
+        Director::getInstance()->replaceScene(TransitionFade::create(0.5f, gameOverScene));
+    }
 }

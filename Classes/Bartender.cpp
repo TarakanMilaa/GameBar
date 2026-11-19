@@ -1,5 +1,6 @@
 #include "Bartender.h"
 #include "Cocktail.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -46,8 +47,27 @@ bool Bartender::init()
     throwAnimation = Animation::createWithSpriteFrames(frames, 0.1f);
     throwAnimation->retain();
 
-    // Запускаємо  кидок кожні 2.5 секунди 
-    this->schedule(schedule_selector(Bartender::throwCocktail), 2.5f);
+    // Зчитуємо рівень гри
+    int gameSpeed = UserDefault::getInstance()->getIntegerForKey("GameSpeed", 1);
+
+    float throwInterval = 2.5f; // інтервал між кидками
+    float frameDelay = 0.1f; // затримка між кадрами анімації
+
+    if (gameSpeed == 2)
+    {
+        throwInterval = 2.0f;
+        frameDelay = 0.08f;
+    }
+    else if (gameSpeed == 3)
+    {
+        throwInterval = 1.5f;
+        frameDelay = 0.06f;
+    }
+
+    throwAnimation = Animation::createWithSpriteFrames(frames, frameDelay);
+    throwAnimation->retain();
+
+    this->schedule(schedule_selector(Bartender::throwCocktail), throwInterval);
 
     idleFrame = frames.front();
     idleFrame->retain();
@@ -58,6 +78,13 @@ bool Bartender::init()
 void Bartender::throwCocktail(float dt)
 {
     auto cocktail = Cocktail::create();
+    cocktail->onMissCallback = [this]() {
+        auto scene = dynamic_cast<GameScene*>(this->getParent());
+        if (scene)
+        {
+            scene->loseLife();
+        }
+        };
     cocktail->setScale(0.06f);
     this->getParent()->addChild(cocktail, 3);
     cocktail->throwFromBartender(this->getPosition() + Vec2(30, 20), this->getPositionX());

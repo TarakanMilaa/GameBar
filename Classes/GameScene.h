@@ -10,11 +10,13 @@ public:
     static cocos2d::Scene* createScene();
     virtual bool init();
 
-    // Збереження вказівника на фізичний світ (лекція Л11-Л12, стор. 38)
+    // Збереження вказівника на фізичний світ
     void SetPhysicsWorld(cocos2d::PhysicsWorld* world) { sceneWorld = world; }
 
-    // Метод виявлення колізій (лекція Л11-Л12, стор. 43)
+    // Метод виявлення колізій
     bool onCollision(cocos2d::PhysicsContact& contact);
+
+    void loseLife();
 
     CREATE_FUNC(GameScene);
 
@@ -22,4 +24,9 @@ private:
     cocos2d::PhysicsWorld* sceneWorld = nullptr;
     Waiter* _waiter = nullptr;
     Bartender* _bartender = nullptr;
+
+    int score = 0;
+    int lives = 3;
+    cocos2d::Label* scoreLabel = nullptr;
+    cocos2d::Vector<cocos2d::Sprite*> hearts;
 };
