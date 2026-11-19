@@ -68,9 +68,9 @@ bool GameScene::init()
     for (int i = 0; i < 3; i++)
     {
         auto heart = Sprite::create("heart.png");
-        heart->setScale(0.1f);
-        heart->setPosition(560 + (i * 65), 700);
-        this->addChild(heart, 2);
+        heart->setScale(0.2f);
+        heart->setPosition(120 + (i * 100), 50);
+        this->addChild(heart, 5);
         hearts.pushBack(heart);
     }
 
