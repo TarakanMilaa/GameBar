@@ -811,14 +811,14 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "GameBar::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-GameBar-Debug-42681dcd6385d3667a4e.json",
+					"jsonFile" : "target-GameBar-Debug-d0647237bc57110e7eb4.json",
 					"name" : "GameBar",
 					"projectIndex" : 0
 				},
 				{
 					"directoryIndex" : 1,
 					"id" : "cocos2d::@b17589fc6237857a1771",
-					"jsonFile" : "target-cocos2d-Debug-42b729ce7b89491d5d48.json",
+					"jsonFile" : "target-cocos2d-Debug-3867de5e8425a9f1e285.json",
 					"name" : "cocos2d",
 					"projectIndex" : 0
 				},
@@ -895,7 +895,7 @@
 				{
 					"directoryIndex" : 2,
 					"id" : "external::@62470bbe2074d04a1904",
-					"jsonFile" : "target-external-Debug-a97b06cfc618e780fd42.json",
+					"jsonFile" : "target-external-Debug-440c388dbbda65a57ccd.json",
 					"name" : "external",
 					"projectIndex" : 1
 				}

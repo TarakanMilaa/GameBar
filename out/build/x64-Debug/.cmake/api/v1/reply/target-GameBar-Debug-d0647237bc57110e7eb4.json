@@ -417,7 +417,8 @@
 				4,
 				5,
 				6,
-				37
+				65,
+				67
 			]
 		},
 		{
@@ -669,11 +670,11 @@
 		},
 		{
 			"backtrace" : 2,
-			"id" : "external::@62470bbe2074d04a1904"
+			"id" : "ext_recast::@49aedbc985f97720d891"
 		},
 		{
 			"backtrace" : 2,
-			"id" : "ext_recast::@49aedbc985f97720d891"
+			"id" : "external::@62470bbe2074d04a1904"
 		},
 		{
 			"backtrace" : 2,
@@ -681,15 +682,11 @@
 		},
 		{
 			"backtrace" : 2,
-			"id" : "ext_edtaa3func::@f3d42e550923b89477b0"
-		},
-		{
-			"backtrace" : 2,
-			"id" : "ext_xxtea::@95546a4b2abc077b0042"
-		},
-		{
-			"backtrace" : 2,
 			"id" : "ext_xxhash::@11e20b8b9139209a045a"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "ext_edtaa3func::@f3d42e550923b89477b0"
 		},
 		{
 			"backtrace" : 2,
@@ -697,11 +694,15 @@
 		},
 		{
 			"backtrace" : 2,
-			"id" : "ext_md5::@82bef7d6fa8c2aa61808"
+			"id" : "ext_xxtea::@95546a4b2abc077b0042"
 		},
 		{
 			"backtrace" : 2,
 			"id" : "ext_poly2tri::@ce0bfd23a4070be0c5de"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "ext_md5::@82bef7d6fa8c2aa61808"
 		},
 		{
 			"backtrace" : 2,
@@ -958,7 +959,8 @@
 				0,
 				1,
 				2,
-				3
+				3,
+				66
 			]
 		},
 		{
@@ -969,7 +971,8 @@
 				5,
 				6,
 				7,
-				37
+				65,
+				67
 			]
 		},
 		{
@@ -994,23 +997,51 @@
 				23,
 				24,
 				25,
+				26,
+				27,
 				28,
 				29,
 				30,
 				31,
 				32,
+				33,
 				34,
 				35,
-				36
+				36,
+				37,
+				38,
+				39,
+				40,
+				41,
+				42,
+				43,
+				44,
+				45,
+				46,
+				47,
+				48,
+				49,
+				50,
+				53,
+				54,
+				55,
+				56,
+				57,
+				58,
+				59,
+				60,
+				62,
+				63,
+				64
 			]
 		},
 		{
 			"name" : "",
 			"sourceIndexes" : 
 			[
-				26,
-				27,
-				33
+				51,
+				52,
+				61
 			]
 		}
 	],
@@ -1067,12 +1098,72 @@
 		},
 		{
 			"backtrace" : 1,
+			"path" : "Resources/ContinueButton.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
 			"path" : "Resources/ExitButton.png",
 			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 1,
+			"path" : "Resources/Fon.jpg",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/FrameText.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/GameBG.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/GameOverBg.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/InputLvl.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/InputName.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/LvlOne.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/LvlThree.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/LvlTwo.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
 			"path" : "Resources/MainMenu.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/MainMenuButton.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/PauseBG.png",
 			"sourceGroupIndex" : 2
 		},
 		{
@@ -1083,6 +1174,36 @@
 		{
 			"backtrace" : 1,
 			"path" : "Resources/RegulationsButton.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/RestartButton.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/SetupBG.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/StartButton.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/StatBG.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/StatButton.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/ToMenuButton.png",
 			"sourceGroupIndex" : 2
 		},
 		{
@@ -1098,6 +1219,41 @@
 		{
 			"backtrace" : 1,
 			"path" : "Resources/brokenheart.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/check_box_active.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/check_box_active_disable.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/check_box_normal.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/check_box_normal_disable.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/check_box_normal_press.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/cocktail.plist",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/cocktail.png",
 			"sourceGroupIndex" : 2
 		},
 		{
@@ -1162,12 +1318,27 @@
 		},
 		{
 			"backtrace" : 1,
+			"path" : "Resources/health.plist",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
 			"path" : "Resources/health.png",
 			"sourceGroupIndex" : 2
 		},
 		{
 			"backtrace" : 1,
 			"path" : "Resources/heart.png",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/poison.plist",
+			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Resources/poison.png",
 			"sourceGroupIndex" : 2
 		},
 		{
@@ -1204,6 +1375,17 @@
 			"backtrace" : 1,
 			"path" : "Resources/waiter.png",
 			"sourceGroupIndex" : 2
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "Classes/PauseScene.cpp",
+			"sourceGroupIndex" : 1
+		},
+		{
+			"backtrace" : 1,
+			"path" : "Classes/PauseScene.h",
+			"sourceGroupIndex" : 0
 		},
 		{
 			"backtrace" : 2,

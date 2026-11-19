@@ -3,6 +3,7 @@
 #include "Bartender.h"
 #include "Cocktail.h"
 #include "GameOverScene.h"
+#include "PauseScene.h"
 
 USING_NS_CC;
 using namespace std;
@@ -13,7 +14,7 @@ Scene* GameScene::createScene()
     scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -98.0f));
 
     auto layer = GameScene::create();
-   layer->SetPhysicsWorld(scene->getPhysicsWorld());
+    layer->SetPhysicsWorld(scene->getPhysicsWorld());
     scene->addChild(layer);
     return scene;
 }
@@ -31,6 +32,18 @@ bool GameScene::init()
     auto background = Sprite::create("GameBG.png");
     background->setPosition(Vec2(size.width / 2, size.height / 2));
     this->addChild(background, 0);
+
+    /*/  нопка паузи
+    auto normalPause = Sprite::create("PauseButton.png");
+    auto selectedPause = Sprite::create("PauseButton.png");
+    selectedPause->setColor(Color3B(150, 150, 150));
+    auto pauseItem = MenuItemSprite::create(normalPause, selectedPause, CC_CALLBACK_1(GameScene::menuPauseCallback, this));
+    pauseItem->setScale(0.3f);
+    pauseItem->setPosition(Vec2(size.width - 60, size.height - 60));
+
+    auto pauseMenu = Menu::create(pauseItem, NULL);
+    pauseMenu->setPosition(Vec2(0, 0)); 
+    this->addChild(pauseMenu, 10);*/
 
     // ќф≥ц≥ант
     auto waiter = Waiter::create();
@@ -75,9 +88,19 @@ bool GameScene::init()
         hearts.pushBack(heart);
     }
 
+    // ѕауза на клав≥шу Esc
+    auto keyListener = EventListenerKeyboard::create();
+    keyListener->onKeyPressed = [this](EventKeyboard::KeyCode keyCode, Event* event)
+        {
+            if (keyCode == EventKeyboard::KeyCode::KEY_ESCAPE)
+            {
+                this->menuPauseCallback(nullptr);
+            }
+        };
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(keyListener, this);
+
     return true;
 }
-
 
 bool GameScene::onCollision(PhysicsContact& contact)
 {
@@ -142,50 +165,53 @@ void GameScene::loseLife()
     // «ам≥нюЇмо картинку в≥дпов≥дного серц€ на розбите
     if (lives >= 0 && lives < hearts.size())
     {
-        hearts.at(lives)->setTexture("brokenheart.png"); // п≥дстав назву свого файлу розбитого серц€!
+        hearts.at(lives)->setTexture("brokenheart.png");
     }
 
-    // якщо житт€ зак≥нчилис€ Ч переходимо на сцену GameOver
-	// якщо житт€ зак≥нчилис€ Ч збер≥гаЇмо рахунок ≥ переходимо на сцену GameOver
-	if (lives <= 0)
-	{
-		auto userDef = UserDefault::getInstance();
+    // якщо житт€ зак≥нчилис€ Ч збер≥гаЇмо рахунок ≥ переходимо на сцену GameOver
+    if (lives <= 0)
+    {
+        auto userDef = UserDefault::getInstance();
 
-		// «бер≥гаЇмо рахунок за поточну гру
-		userDef->setIntegerForKey("LastScore", score);
+        // «бер≥гаЇмо рахунок за поточну гру
+        userDef->setIntegerForKey("LastScore", score);
 
-		// Ѕеремо поточну швидк≥сть (перев≥р, щоб ключ зб≥гавс€ з тим, що в SetupScene.cpp!)
-		int speed = userDef->getIntegerForKey("GameSpeed", 1);
-		string playerName = userDef->getStringForKey("PlayerName", u8"√≥сть");
+        // Ѕеремо поточну швидк≥сть
+        int speed = userDef->getIntegerForKey("GameSpeed", 1);
+        string playerName = userDef->getStringForKey("PlayerName", u8"√≥сть");
 
-		string scoreKey = "BestScore_" + std::to_string(speed);
-		string nameKey = "BestPlayer_" + std::to_string(speed);
+        string scoreKey = "BestScore_" + std::to_string(speed);
+        string nameKey = "BestPlayer_" + std::to_string(speed);
 
-		int currentBest = userDef->getIntegerForKey(scoreKey.c_str(), 0);
-		if (score > currentBest)
-		{
-			userDef->setIntegerForKey(scoreKey.c_str(), score);
-			userDef->setStringForKey(nameKey.c_str(), playerName);
-		}
+        int currentBest = userDef->getIntegerForKey(scoreKey.c_str(), 0);
+        if (score > currentBest)
+        {
+            userDef->setIntegerForKey(scoreKey.c_str(), score);
+            userDef->setStringForKey(nameKey.c_str(), playerName);
+        }
 
-		userDef->flush();
+        userDef->flush();
 
-		auto gameOverScene = GameOverScene::createScene();
-		Director::getInstance()->replaceScene(TransitionFade::create(0.5f, gameOverScene));
-	}
+        auto gameOverScene = GameOverScene::createScene();
+        Director::getInstance()->replaceScene(TransitionFade::create(0.5f, gameOverScene));
+    }
 }
 
 void GameScene::gainLife()
 {
-    // ¬≥дновлюЇмо житт€, т≥льки €кщо њх менше максимуму (3) ≥ гра ще не програна
     if (lives <= 0 || lives >= 3) return;
 
-    // ќск≥льки перед втратою ми робили lives-- ≥ брали hearts.at(lives),
-    // то зараз поточне значенн€ lives €краз вказуЇ на перше розбите серце!
     if (lives >= 0 && lives < hearts.size())
     {
-        hearts.at(lives)->setTexture("heart.png"); 
+        hearts.at(lives)->setTexture("heart.png");
     }
 
     lives++;
 }
+
+void GameScene::menuPauseCallback(Ref* pSender)
+{
+    //  ладемо PauseScene поверх GameScene Ч гра автоматично заморожуЇтьс€
+    Director::getInstance()->pushScene(PauseScene::createScene());
+}
+

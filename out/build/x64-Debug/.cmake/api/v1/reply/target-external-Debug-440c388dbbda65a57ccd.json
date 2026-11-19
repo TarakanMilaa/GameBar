@@ -294,15 +294,11 @@
 		},
 		{
 			"backtrace" : 2,
-			"id" : "ext_edtaa3func::@f3d42e550923b89477b0"
-		},
-		{
-			"backtrace" : 2,
-			"id" : "ext_xxtea::@95546a4b2abc077b0042"
-		},
-		{
-			"backtrace" : 2,
 			"id" : "ext_xxhash::@11e20b8b9139209a045a"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "ext_edtaa3func::@f3d42e550923b89477b0"
 		},
 		{
 			"backtrace" : 2,
@@ -310,11 +306,15 @@
 		},
 		{
 			"backtrace" : 2,
-			"id" : "ext_md5::@82bef7d6fa8c2aa61808"
+			"id" : "ext_xxtea::@95546a4b2abc077b0042"
 		},
 		{
 			"backtrace" : 2,
 			"id" : "ext_poly2tri::@ce0bfd23a4070be0c5de"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "ext_md5::@82bef7d6fa8c2aa61808"
 		},
 		{
 			"backtrace" : 2,

@@ -24,6 +24,7 @@ public:
 
     // Метод виявлення колізій
     bool onCollision(cocos2d::PhysicsContact& contact);
+    void menuPauseCallback(cocos2d::Ref* pSender);
 
     void loseLife(); 
     void gainLife();
