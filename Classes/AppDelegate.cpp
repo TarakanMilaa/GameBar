@@ -1,5 +1,5 @@
 #include "AppDelegate.h"
-#include "MainMenuScene.h"
+#include "MainMenuScene.h" // Змінено для відображення іншої сцени
 
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
@@ -40,21 +40,21 @@ bool AppDelegate::applicationDidFinishLaunching() {
     auto glview = director->getOpenGLView();
     if (!glview) {
 #if (CC_TARGET_PLATFORM == CC_PLATFORM_WIN32) || (CC_TARGET_PLATFORM == CC_PLATFORM_MAC) || (CC_TARGET_PLATFORM == CC_PLATFORM_LINUX)
-        glview = GLViewImpl::createWithRect("GameBar", cocos2d::Rect(0, 0, 1280, 720));
+        glview = GLViewImpl::createWithRect("GameBar", cocos2d::Rect(0, 0, 1702, 924));
 #else
         glview = GLViewImpl::create("GameBar");
 #endif
         director->setOpenGLView(glview);
     }
 
-    director->setDisplayStats(true);
+    director->setDisplayStats(false);
     director->setAnimationInterval(1.0f / 60);
 
     glview->setDesignResolutionSize(1702, 924, ResolutionPolicy::SHOW_ALL);
 
     register_all_packages();
 
-    auto scene = MainMenuScene::createScene();
+    auto scene = MainMenuScene::createScene(); // Змінено для відображення іншої сцени
     director->runWithScene(scene);
 
     return true;

@@ -1,151 +1,169 @@
 #include "GameScene.h"
+#include "Waiter.h"
+#include "Bartender.h"
+#include "Cocktail.h"
 #include "GameOverScene.h"
-#include "DataManager.h"
-// ТУТ БРАКУЄ КОДУ ІРИ:
-// #include "Waiter.h"
-// #include "Bartender.h"
-// #include "Cocktail.h"
 
 USING_NS_CC;
 using namespace std;
 
 Scene* GameScene::createScene()
 {
-	// Створення сцени з використанням фізичних законів[cite: 2]
-	auto scene = Scene::createWithPhysics(); [cite:1]
+    auto scene = Scene::createWithPhysics();
+    scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -98.0f));
 
-		// Встановлення глобальної сили тяжіння[cite: 2]
-		scene->getPhysicsWorld()->setGravity(Vec2(0.0f, -98.0f)); [cite:2]
-
-		// Для відображення контурів фізичних форм (дебаг) - розкоментуйте за потреби[cite: 2]
-		// scene->getPhysicsWorld()->setDebugDrawMask(PhysicsWorld::DEBUGDRAW_ALL);[cite: 2]
-
-		auto layer = GameScene::create();
-	scene->addChild(layer);
-
-	return scene; [cite:1]
+    auto layer = GameScene::create();
+   layer->SetPhysicsWorld(scene->getPhysicsWorld());
+    scene->addChild(layer);
+    return scene;
 }
 
 bool GameScene::init()
 {
-	if (!Layer::init())
-	{
-		return false;
-	}
+    if (!Scene::init())
+    {
+        return false;
+    }
 
-	Size size = Director::getInstance()->getWinSize(); [cite:35]
+    Size size = Director::getInstance()->getWinSize();
 
-		DataManager::getInstance()->resetGameData();
+    // фон
+    auto background = Sprite::create("GameBG.png");
+    background->setPosition(Vec2(size.width / 2, size.height / 2));
+    this->addChild(background, 0);
 
-	// Фон (потрібно додати картинку GameBG.png у Resources)
-	auto background = Sprite::create("GameBG.png");
-	if (background) {
-		background->setPosition(Vec2(size.width / 2, size.height / 2)); [cite:35]
-			this->addChild(background, -1);
-	}
+    // Офіціант
+    auto waiter = Waiter::create();
+    waiter->setPosition(Vec2(size.width / 2, 200));
+    waiter->setScale(0.2f);
+    this->addChild(waiter, 3);
 
-	// Текстові мітки[cite: 18]
-	_scoreLabel = Label::createWithTTF(u8"Рахунок: 0", "fonts/Marker Felt.ttf", 32); [cite:18]
-		_scoreLabel->setPosition(Vec2(120, size.height - 40));
-	this->addChild(_scoreLabel, 10);
+    // Бармен
+    auto bartender = Bartender::create();
+    bartender->setScale(0.1f);
+    bartender->setPosition(Vec2(210, 450));
+    this->addChild(bartender, 1);
 
-	_livesLabel = Label::createWithTTF(u8"Життя: 3", "fonts/Marker Felt.ttf", 32); [cite:18]
-		_livesLabel->setPosition(Vec2(size.width - 100, size.height - 40));
-	this->addChild(_livesLabel, 10);
+    // Нижній шар фону
+    auto buttonBackground = Sprite::create("GameBG.png", Rect(0, 590, 1703, 340));
+    float heightButtonBG = buttonBackground->getBoundingBox().size.height;
 
-	// Створення фізичної підлоги для виявлення пропущених коктейлів
-	auto ground = Node::create();
-	auto groundBody = PhysicsBody::createBox(Size(size.width, 20), PhysicsMaterial(0.1f, 1.0f, 0.0f)); [cite:3]
-		groundBody->setDynamic(false); [cite:4] // Статичне тіло[cite: 4]
-		groundBody->setCategoryBitmask(0x4); // Категорія підлоги[cite: 6]
-	groundBody->setContactTestBitmask(0x2); // Реагує на коктейлі (яким ви задасте 0x2)[cite: 9]
-	ground->setPhysicsBody(groundBody); [cite:3]
-		ground->setPosition(Vec2(size.width / 2, 0));
-	ground->setTag(3); // Тег підлоги[cite: 8]
-	this->addChild(ground);
+    buttonBackground->setPosition(Vec2(size.width / 2, heightButtonBG / 2 - 8));
+    this->addChild(buttonBackground, 2);
 
-	// ТУТ БРАКУЄ КОДУ ІРИ:
-	// 1. Створення об'єкта Bartender і додавання його на сцену
-	// 2. Створення об'єкта Waiter і додавання його на сцену
-	// (Не забудьте призначити Waiter-у: setTag(1), setCategoryBitmask(0x1), setContactTestBitmask(0x2))
+    // Створення слухача фізики
+    auto contactListener = EventListenerPhysicsContact::create();
+    contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onCollision, this);
+    this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this);
 
-	// Детектування колізій через EventDispatcher[cite: 7]
-	auto contactListener = EventListenerPhysicsContact::create(); [cite:7]
-		contactListener->onContactBegin = CC_CALLBACK_1(GameScene::onCollision, this); [cite:7]
-		this->getEventDispatcher()->addEventListenerWithSceneGraphPriority(contactListener, this); [cite:7]
+    // Лічильник очок
+    score = 0;
+    scoreLabel = Label::createWithSystemFont("Score: 0", "Arial", 36);
+    scoreLabel->setAnchorPoint(Vec2(0, 0.5f));
+    scoreLabel->setPosition(540, 750);
+    scoreLabel->setTextColor(cocos2d::Color4B(255, 212, 132, 255));
+    this->addChild(scoreLabel, 2);
 
-		// Запуск оновлення сцени кожного кадру[cite: 71]
-		this->scheduleUpdate(); [cite:71]
+    // Серця
+    lives = 3;
+    for (int i = 0; i < 3; i++)
+    {
+        auto heart = Sprite::create("heart.png");
+        heart->setScale(0.2f);
+        heart->setPosition(120 + (i * 100), 50);
+        this->addChild(heart, 5);
+        hearts.pushBack(heart);
+    }
 
-		// Таймер генерації коктейлів (частота залежить від вибраної складності)
-		int speedLevel = DataManager::getInstance()->getGameSpeed();
-	float spawnRate = 2.0f / speedLevel;
-	this->schedule(schedule_selector(GameScene::spawnCocktail), spawnRate); [cite:71]
-
-		return true;
+    return true;
 }
 
-void GameScene::spawnCocktail(float dt)
-{
-	// ТУТ БРАКУЄ КОДУ ІРИ:
-	// Тут потрібно викликати метод генерації з класу Bartender.
-	// Коли її клас Cocktail буде створюватися, він обов'язково повинен мати:
-	// body->setCategoryBitmask(0x2);[cite: 6]
-	// body->setContactTestBitmask(0x1 | 0x4); // щоб спрацьовував onContactBegin з офіціантом (1) і підлогою (4)[cite: 9]
-	// sprite->setTag(2);[cite: 8]
-}
 
-void GameScene::update(float dt)
-{
-	// Оновлення тексту на екрані
-	_scoreLabel->setString(u8"Рахунок: " + to_string(DataManager::getInstance()->score));
-	_livesLabel->setString(u8"Життя: " + to_string(DataManager::getInstance()->lives));
-
-	// Перевірка на програш
-	if (DataManager::getInstance()->lives <= 0)
-	{
-		// Зберігаємо рекорд і переходимо на екран програшу
-		DataManager::getInstance()->saveHighScore();
-		auto scene = GameOverScene::createScene();
-		Director::getInstance()->replaceScene(scene); [cite:36]
-	}
-}
-
-// Ідентифікація колізій під час контакту[cite: 7, 8]
 bool GameScene::onCollision(PhysicsContact& contact)
 {
-	auto nodeA = contact.getShapeA()->getBody()->getNode(); [cite:8]
-		auto nodeB = contact.getShapeB()->getBody()->getNode(); [cite:8]
+    auto nodeA = contact.getShapeA()->getBody()->getNode();
+    auto nodeB = contact.getShapeB()->getBody()->getNode();
+    if (!nodeA || !nodeB) return false;
 
-		if (!nodeA || !nodeB) return false;
+    int tagA = nodeA->getTag();
+    int tagB = nodeB->getTag();
 
-	int tagA = nodeA->getTag(); [cite:8]
-		int tagB = nodeB->getTag(); [cite:8]
+    // 1. Офіціант (1) зловив ХОРОШИЙ коктейль (2) -> +1 очко
+    if ((tagA == 1 && tagB == 2) || (tagA == 2 && tagB == 1))
+    {
+        Node* cocktailNode = (tagA == 2) ? nodeA : nodeB;
+        cocktailNode->setTag(0);
+        cocktailNode->setVisible(false);
 
-		// Теги: 1 - Waiter, 2 - Cocktail, 3 - Ground
+        cocktailNode->scheduleOnce([cocktailNode](float dt) {
+            cocktailNode->removeFromParentAndCleanup(true);
+            }, 0.0f, "remove_cocktail");
 
-		// Колізія: Офіціант і Коктейль
-		if ((tagA == 1 && tagB == 2) || (tagA == 2 && tagB == 1))
-		{
-			// ТУТ БРАКУЄ КОДУ ІРИ:
-			// Перевірка типу коктейлю (хороший чи поганий) і нарахування балів або життів.
-			// Поки що за замовчуванням просто даємо +10 очок:
-			DataManager::getInstance()->score += 10;
+        score++;
+        scoreLabel->setString("Score: " + std::to_string(score));
+    }
+    // 2. Офіціант (1) зловив КОКТЕЙЛЬ СМЕРТІ (3) -> -1 життя
+    else if ((tagA == 1 && tagB == 3) || (tagA == 3 && tagB == 1))
+    {
+        Node* cocktailNode = (tagA == 3) ? nodeA : nodeB;
+        cocktailNode->setTag(0);
+        cocktailNode->setVisible(false);
 
-			// Видалення коктейлю зі сцени
-			if (tagA == 2) nodeA->removeFromParentAndCleanup(true); [cite:7]
-			else nodeB->removeFromParentAndCleanup(true); [cite:7]
-		}
+        cocktailNode->scheduleOnce([cocktailNode](float dt) {
+            cocktailNode->removeFromParentAndCleanup(true);
+            }, 0.0f, "remove_bad_cocktail");
 
-	// Колізія: Коктейль і Підлога (пропущений напій)
-	if ((tagA == 2 && tagB == 3) || (tagA == 3 && tagB == 2))
-	{
-		DataManager::getInstance()->lives -= 1;
+        this->loseLife();
+    }
+    // 3. Офіціант зловив цілющий коктейль -> +1 життя
+    else if ((tagA == TAG_WAITER && tagB == TAG_HEAL_COCKTAIL) ||
+        (tagA == TAG_HEAL_COCKTAIL && tagB == TAG_WAITER))
+    {
+        Node* cocktailNode = (tagA == TAG_HEAL_COCKTAIL) ? nodeA : nodeB;
+        cocktailNode->setTag(TAG_NONE);
+        cocktailNode->setVisible(false);
 
-		// Видалення коктейлю зі сцени
-		if (tagA == 2) nodeA->removeFromParentAndCleanup(true); [cite:7]
-		else nodeB->removeFromParentAndCleanup(true); [cite:7]
-	}
+        cocktailNode->scheduleOnce([cocktailNode](float dt) {
+            cocktailNode->removeFromParentAndCleanup(true);
+            }, 0.0f, "remove_heal_cocktail");
 
-	return true; [cite:7]
+        this->gainLife();
+    }
+
+    return true;
+}
+
+void GameScene::loseLife()
+{
+    if (lives <= 0) return;
+
+    lives--;
+
+    // Замінюємо картинку відповідного серця на розбите
+    if (lives >= 0 && lives < hearts.size())
+    {
+        hearts.at(lives)->setTexture("brokenheart.png"); // підстав назву свого файлу розбитого серця!
+    }
+
+    // Якщо життя закінчилися — переходимо на сцену GameOver
+    if (lives <= 0)
+    {
+        auto gameOverScene = GameOverScene::createScene();
+        Director::getInstance()->replaceScene(TransitionFade::create(0.5f, gameOverScene));
+    }
+}
+
+void GameScene::gainLife()
+{
+    // Відновлюємо життя, тільки якщо їх менше максимуму (3) і гра ще не програна
+    if (lives <= 0 || lives >= 3) return;
+
+    // Оскільки перед втратою ми робили lives-- і брали hearts.at(lives),
+    // то зараз поточне значення lives якраз вказує на перше розбите серце!
+    if (lives >= 0 && lives < hearts.size())
+    {
+        hearts.at(lives)->setTexture("heart.png"); 
+    }
+
+    lives++;
 }
