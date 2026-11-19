@@ -1,4 +1,5 @@
 #include "Waiter.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -56,7 +57,7 @@ bool Waiter::init()
     physics_waiter->setCollisionBitmask(0x1);
     physics_waiter->setContactTestBitmask(true);
     this->setPhysicsBody(physics_waiter);
-    this->setTag(1);
+    this->setTag(TAG_WAITER);
 
     // Прослуховувачі клавіш
     auto listener = EventListenerKeyboard::create();

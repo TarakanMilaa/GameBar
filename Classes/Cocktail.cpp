@@ -1,4 +1,5 @@
 #include "Cocktail.h"
+#include "GameScene.h"
 
 USING_NS_CC;
 
@@ -16,31 +17,67 @@ Cocktail* Cocktail::create()
 
 bool Cocktail::init()
 {
-    // 1. Завантажуємо спрайт-лист коктейлів
-    SpriteFrameCache::getInstance()->addSpriteFramesWithFile("cocktail.plist");
+    // 1. Завантажуємо всі три спрайт-листи
+    auto cache = SpriteFrameCache::getInstance();
+    cache->addSpriteFramesWithFile("cocktail.plist");
+    cache->addSpriteFramesWithFile("poison.plist");
+    cache->addSpriteFramesWithFile("health.plist");
 
-    // 2. Вибираємо випадковий коктейль із 10
-    int randomIndex = cocos2d::random(1, 10);
-    std::string frameName = StringUtils::format("cocktail%d.png", randomIndex);
+    // 2. Дізнаємося поточну кількість життів гравця
+    int currentLives = 3;
+    auto gameScene = dynamic_cast<GameScene*>(Director::getInstance()->getRunningScene());
+    if (gameScene)
+    {
+        currentLives = gameScene->getLives();
+    }
 
+    // 3. Вибираємо тип коктейлю (0..9):
+    // 0-6: хороший (70%), 7-8: поганий (20%), 9: коктейль життя (10%, тільки якщо lives < 3)
+    int typeChance = cocos2d::random(0, 9);
+    int tagToSet = TAG_GOOD_COCKTAIL;
+    std::string frameName;
+
+    if (typeChance == 9  && currentLives < 3)
+    {
+        // Коктейль життя
+        isBad = true;
+        tagToSet = TAG_HEAL_COCKTAIL;
+        frameName = "health.png";
+    }
+    else if (typeChance == 7 || typeChance == 8)
+    {
+        // Коктейль смерті
+        isBad = true;
+        tagToSet = TAG_BAD_COCKTAIL;
+        int randomIndex = cocos2d::random(1, 3);
+        frameName = StringUtils::format("poison%d.png", randomIndex);
+    }
+    else
+    {
+        // Хороший коктейль (0-6, або якщо випало 9 при повних 3 серцях)
+        isBad = false;
+        tagToSet = TAG_GOOD_COCKTAIL;
+        int randomIndex = cocos2d::random(1, 10);
+        frameName = StringUtils::format("cocktail%d.png", randomIndex);
+    }
+
+    // 4. Ініціалізуємо спрайт вибраним кадром зі спрайт-листа
     if (!Sprite::initWithSpriteFrameName(frameName))
     {
         return false;
     }
 
-    // 3. Створюємо фізичне тіло коктейлю 
+    // 5. Створюємо фізичне тіло коктейлю
     Size bodySize = Size(this->getContentSize().width * 0.06f, this->getContentSize().height * 0.12f);
     auto physics_cocktail = PhysicsBody::createBox(bodySize, PhysicsMaterial(0.0f, 1.0f, 0.0f));
-    physics_cocktail->setDynamic(false); // поки в руках бармена, гравітація не діє
+    physics_cocktail->setDynamic(false);
     physics_cocktail->setCategoryBitmask(0x1);
     physics_cocktail->setCollisionBitmask(0x1);
     physics_cocktail->setContactTestBitmask(true);
     this->setPhysicsBody(physics_cocktail);
 
-    // Встановлюємо тег 2 для ідентифікації під час
-    this->setTag(2);
-
-    // Запускаємо оновлення update(dt)
+    // 6. Встановлюємо тег для колізій та запускаємо update(dt)
+    this->setTag(tagToSet);
     this->scheduleUpdate();
 
     return true;
@@ -87,12 +124,14 @@ void Cocktail::throwFromBartender(Vec2 handStartPos, float bartenderX)
 
 void Cocktail::update(float dt)
 {
-    // Якщо коктейль впав нижче екрана — видаляємо його зі сцени і повідомляємо про це для рахунку
-    if (this->getPositionY() < -10.0f)
+    if (this->getPositionY() < -100.0f)
     {
-        if (onMissCallback)
+        // Знімаємо життя ТІЛЬКИ якщо пропущений коктейль НЕ поганий (!isBad)
+        if (!isBad && onMissCallback)
         {
-            onMissCallback();
+            auto callback = onMissCallback;
+            onMissCallback = nullptr;
+            callback();
         }
         this->removeFromParentAndCleanup(true);
     }

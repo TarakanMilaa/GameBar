@@ -61,7 +61,7 @@ bool GameScene::init()
     scoreLabel->setAnchorPoint(Vec2(0, 0.5f));
     scoreLabel->setPosition(540, 750);
     scoreLabel->setTextColor(cocos2d::Color4B(255, 212, 132, 255));
-    this->addChild(scoreLabel, 4);
+    this->addChild(scoreLabel, 2);
 
     // Серця
     lives = 3;
@@ -70,7 +70,7 @@ bool GameScene::init()
         auto heart = Sprite::create("heart.png");
         heart->setScale(0.1f);
         heart->setPosition(560 + (i * 65), 700);
-        this->addChild(heart, 4);
+        this->addChild(heart, 2);
         hearts.pushBack(heart);
     }
 
@@ -87,14 +87,46 @@ bool GameScene::onCollision(PhysicsContact& contact)
     int tagA = nodeA->getTag();
     int tagB = nodeB->getTag();
 
+    // 1. Офіціант (1) зловив ХОРОШИЙ коктейль (2) -> +1 очко
     if ((tagA == 1 && tagB == 2) || (tagA == 2 && tagB == 1))
     {
         Node* cocktailNode = (tagA == 2) ? nodeA : nodeB;
-        cocktailNode->stopAllActions();
-        cocktailNode->removeFromParentAndCleanup(true);
+        cocktailNode->setTag(0);
+        cocktailNode->setVisible(false);
+
+        cocktailNode->scheduleOnce([cocktailNode](float dt) {
+            cocktailNode->removeFromParentAndCleanup(true);
+            }, 0.0f, "remove_cocktail");
 
         score++;
         scoreLabel->setString("Score: " + std::to_string(score));
+    }
+    // 2. Офіціант (1) зловив КОКТЕЙЛЬ СМЕРТІ (3) -> -1 життя
+    else if ((tagA == 1 && tagB == 3) || (tagA == 3 && tagB == 1))
+    {
+        Node* cocktailNode = (tagA == 3) ? nodeA : nodeB;
+        cocktailNode->setTag(0);
+        cocktailNode->setVisible(false);
+
+        cocktailNode->scheduleOnce([cocktailNode](float dt) {
+            cocktailNode->removeFromParentAndCleanup(true);
+            }, 0.0f, "remove_bad_cocktail");
+
+        this->loseLife();
+    }
+    // 3. Офіціант зловив цілющий коктейль -> +1 життя
+    else if ((tagA == TAG_WAITER && tagB == TAG_HEAL_COCKTAIL) ||
+        (tagA == TAG_HEAL_COCKTAIL && tagB == TAG_WAITER))
+    {
+        Node* cocktailNode = (tagA == TAG_HEAL_COCKTAIL) ? nodeA : nodeB;
+        cocktailNode->setTag(TAG_NONE);
+        cocktailNode->setVisible(false);
+
+        cocktailNode->scheduleOnce([cocktailNode](float dt) {
+            cocktailNode->removeFromParentAndCleanup(true);
+            }, 0.0f, "remove_heal_cocktail");
+
+        this->gainLife();
     }
 
     return true;
@@ -118,4 +150,19 @@ void GameScene::loseLife()
         auto gameOverScene = GameOverScene::createScene();
         Director::getInstance()->replaceScene(TransitionFade::create(0.5f, gameOverScene));
     }
+}
+
+void GameScene::gainLife()
+{
+    // Відновлюємо життя, тільки якщо їх менше максимуму (3) і гра ще не програна
+    if (lives <= 0 || lives >= 3) return;
+
+    // Оскільки перед втратою ми робили lives-- і брали hearts.at(lives),
+    // то зараз поточне значення lives якраз вказує на перше розбите серце!
+    if (lives >= 0 && lives < hearts.size())
+    {
+        hearts.at(lives)->setTexture("heart.png"); 
+    }
+
+    lives++;
 }

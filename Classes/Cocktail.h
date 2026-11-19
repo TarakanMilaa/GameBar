@@ -7,6 +7,7 @@ public:
     static Cocktail* create();
     virtual bool init();
     virtual void update(float dt);
+    bool isBad = false;
 
     // Метод підйому в руці та кидка барменом
     void throwFromBartender(cocos2d::Vec2 handStartPos, float bartenderX);
