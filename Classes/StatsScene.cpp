@@ -38,26 +38,31 @@ bool StatsScene::init()
 	int bestScore3 = userDef->getIntegerForKey("BestScore_3", 0);
 	string bestName3 = userDef->getStringForKey("BestPlayer_3", u8"---");
 
+	// Шлях до шрифту (якщо закинула в папку Resources/fonts/, зміни на "fonts/PressStart2P-Regular.ttf")
+	string fontPath = "fonts/PressStart2P-Regular.ttf";
+
+	float boardCenterX = size.width * 0.56f; // центр самої дошки (підкрути 0.55f - 0.57f за потреби)
+
 	// Виводимо результати (координати Y потім легко підженеш під свою картинку)
-	auto level1Label = Label::createWithSystemFont(
-		u8"Рівень 1 (Повільний):  " + bestName1 + u8" — " + to_string(bestScore1),
-		"Arial", 36);
+	auto level1Label = Label::createWithTTF(
+		u8"Рівень 1 (Повільний): " + bestName1 + u8" - " + to_string(bestScore1),
+		fontPath, 24);
 	level1Label->setTextColor(Color4B(255, 255, 255, 255));
-	level1Label->setPosition(Vec2(size.width / 2, size.height * 0.68f));
+	level1Label->setPosition(Vec2(boardCenterX, size.height * 0.68f));
 	this->addChild(level1Label, 1);
 
-	auto level2Label = Label::createWithSystemFont(
-		u8"Рівень 2 (Середній):  " + bestName2 + u8" — " + to_string(bestScore2),
-		"Arial", 36);
+	auto level2Label = Label::createWithTTF(
+		u8"Рівень 2 (Середній): " + bestName2 + u8" - " + to_string(bestScore2),
+		fontPath, 24);
 	level2Label->setTextColor(Color4B(255, 230, 150, 255));
-	level2Label->setPosition(Vec2(size.width / 2, size.height * 0.56f));
+	level2Label->setPosition(Vec2(boardCenterX, size.height * 0.56f));
 	this->addChild(level2Label, 1);
 
-	auto level3Label = Label::createWithSystemFont(
-		u8"Рівень 3 (Швидкий):  " + bestName3 + u8" — " + to_string(bestScore3),
-		"Arial", 36);
+	auto level3Label = Label::createWithTTF(
+		u8"Рівень 3 (Швидкий): " + bestName3 + u8" - " + to_string(bestScore3),
+		fontPath, 24);
 	level3Label->setTextColor(Color4B(255, 180, 120, 255));
-	level3Label->setPosition(Vec2(size.width / 2, size.height * 0.44f));
+	level3Label->setPosition(Vec2(boardCenterX, size.height * 0.44f));
 	this->addChild(level3Label, 1);
 
 	// Кнопка повернення в меню

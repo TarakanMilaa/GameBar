@@ -56,7 +56,7 @@ bool MainMenuScene::init()
     auto statsItem = MenuItemSprite::create(normalStats, selectedStats, CC_CALLBACK_1(MainMenuScene::menuStatsCallback, this));
     statsItem->setScale(0.13f); // масштабуємо, щоб вона акуратно виглядала на стійці
     // розміщуємо на барній стійці зліва (приблизні координати на основі візуального аналізу інтер'єру)
-    statsItem->setPosition(Vec2(170, 360));
+    statsItem->setPosition(Vec2(170, 357));
 
     // об'єднання всіх кнопок в об'єкт Меню (додано statsItem)
     auto menu = Menu::create(playItem, rulesItem, exitItem, statsItem, NULL);

@@ -1,5 +1,7 @@
 #include "AppDelegate.h"
-#include "MainMenuScene.h" // Змінено для відображення іншої сцени
+#include "MainMenuScene.h" 
+
+#define USE_AUDIO_ENGINE 1
 
 #if USE_AUDIO_ENGINE
 #include "audio/include/AudioEngine.h"
@@ -54,8 +56,15 @@ bool AppDelegate::applicationDidFinishLaunching() {
 
     register_all_packages();
 
-    auto scene = MainMenuScene::createScene(); // Змінено для відображення іншої сцени
+    auto scene = MainMenuScene::createScene(); 
     director->runWithScene(scene);
+
+#if USE_AUDIO_ENGINE
+    AudioEngine::play2d("tavern_music.mp3", true, 0.3f); //МУЗИКА
+#elif USE_SIMPLE_AUDIO_ENGINE
+    SimpleAudioEngine::getInstance()->playBackgroundMusic("tavern_music.mp3", true);
+    SimpleAudioEngine::getInstance()->setBackgroundMusicVolume(0.4f);
+#endif
 
     return true;
 }

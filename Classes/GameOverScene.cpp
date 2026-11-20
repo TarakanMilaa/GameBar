@@ -34,14 +34,17 @@ bool GameOverScene::init()
 	string playerName = UserDefault::getInstance()->getStringForKey("PlayerName", u8"Гість");
 	int finalScore = UserDefault::getInstance()->getIntegerForKey("LastScore", 0);
 
+	// Шлях до піксельного шрифту
+	string fontPath = "fonts/PressStart2P-Regular.ttf";
+
 	// Виведення імені гравця (усередині дошки під словом "Результати")
-	auto nameLabel = Label::createWithSystemFont(u8"Гравець: " + playerName, "Arial", 38);
+	auto nameLabel = Label::createWithTTF(u8"Гравець: " + playerName, fontPath, 24);
 	nameLabel->setTextColor(Color4B(255, 255, 255, 255));
 	nameLabel->setPosition(Vec2(boardCenterX, size.height * 0.58f));
 	this->addChild(nameLabel, 1);
 
 	// Виведення рахунку
-	auto scoreLabel = Label::createWithSystemFont(u8"Ваш рахунок: " + std::to_string(finalScore), "Arial", 44);
+	auto scoreLabel = Label::createWithTTF(u8"Ваш рахунок: " + std::to_string(finalScore), fontPath, 28);
 	scoreLabel->setTextColor(Color4B(255, 215, 0, 255));
 	scoreLabel->setPosition(Vec2(boardCenterX, size.height * 0.48f));
 	this->addChild(scoreLabel, 1);

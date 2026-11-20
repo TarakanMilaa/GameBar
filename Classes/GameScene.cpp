@@ -42,7 +42,7 @@ bool GameScene::init()
     pauseItem->setPosition(Vec2(size.width - 60, size.height - 60));
 
     auto pauseMenu = Menu::create(pauseItem, NULL);
-    pauseMenu->setPosition(Vec2(0, 0)); 
+    pauseMenu->setPosition(Vec2(0, 0));
     this->addChild(pauseMenu, 10);*/
 
     // ќф≥ц≥ант
@@ -71,7 +71,7 @@ bool GameScene::init()
 
     // Ћ≥чильник очок
     score = 0;
-    scoreLabel = Label::createWithSystemFont("Score: 0", "Arial", 36);
+    scoreLabel = Label::createWithTTF("Score: 0", "fonts/PressStart2P-Regular.ttf", 26);
     scoreLabel->setAnchorPoint(Vec2(0, 0.5f));
     scoreLabel->setPosition(540, 750);
     scoreLabel->setTextColor(cocos2d::Color4B(255, 212, 132, 255));
@@ -214,4 +214,3 @@ void GameScene::menuPauseCallback(Ref* pSender)
     //  ладемо PauseScene поверх GameScene Ч гра автоматично заморожуЇтьс€
     Director::getInstance()->pushScene(PauseScene::createScene());
 }
-
